@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --color-ivory: #faf7f2;
+  --color-beige: #ece1cd;
+  --color-beige-dark: #d9c9a8;
+  --color-charcoal: #201c1a;
+  --color-rose: #d9a9a0;
+  --color-rose-dark: #b9776c;
+  --color-gold: #c9a66b;
+}
+
+@theme inline {
+  --color-ivory: var(--color-ivory);
+  --color-beige: var(--color-beige);
+  --color-beige-dark: var(--color-beige-dark);
+  --color-charcoal: var(--color-charcoal);
+  --color-rose: var(--color-rose);
+  --color-rose-dark: var(--color-rose-dark);
+  --color-gold: var(--color-gold);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: var(--font-body), sans-serif;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading), serif;
+}
+
+::selection {
+  background: var(--color-rose);
+  color: #fff;
+}
+
+/* Unifies real photography from varied sources under the brand's warm, soft tone */
+.brand-photo {
+  filter: saturate(0.92) sepia(0.08) contrast(1.02) brightness(1.02);
+}
+
+.container-site {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container-site {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

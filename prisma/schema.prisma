@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  nameFr    String
+  nameAr    String
+  image     String
+  order     Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id               String           @id @default(cuid())
+  slug             String           @unique
+  sku              String           @unique
+  nameFr           String
+  nameAr           String
+  descriptionFr    String
+  descriptionAr    String
+  composition      String?
+  price            Float
+  oldPrice         Float?
+  images           String
+  categoryId       String
+  category         Category         @relation(fields: [categoryId], references: [id])
+  isNew            Boolean          @default(false)
+  isFeatured       Boolean          @default(false)
+  isActive         Boolean          @default(true)
+  seoTitle         String?
+  seoDescription   String?
+  variants         ProductVariant[]
+  orderItems       OrderItem[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model ProductVariant {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  color     String
+  stock     Int     @default(0)
+
+  @@unique([productId, size, color])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  customerName  String
+  phone         String
+  whatsapp      String?
+  city          String
+  address       String
+  neighborhood  String?
+  postalCode    String?
+  notes         String?
+  subtotal      Float
+  shippingFee   Float
+  total         Float
+  status        String      @default("Nouvelle")
+  paymentMethod String      @default("COD")
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  name      String
+  size      String
+  color     String
+  qty       Int
+  unitPrice Float
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model Settings {
+  id                   String   @id @default("singleton")
+  whatsappNumber       String   @default("212600000000")
+  instagramUrl         String   @default("https://instagram.com/lallazina")
+  facebookUrl          String   @default("https://facebook.com/lallazina")
+  tiktokUrl            String   @default("https://tiktok.com/@lallazina")
+  contactEmail         String   @default("contact@lallazina.ma")
+  contactPhone         String   @default("212600000000")
+  storeAddress         String   @default("Casablanca, Maroc (adresse à confirmer)")
+  freeShippingThreshold Float   @default(500)
+  deliveryFeesJson     String
+  returnPolicyTextFr   String
+  returnPolicyTextAr   String
+  sizeGuideJson        String
+  heroImage            String   @default("/images/hero.jpg")
+  promoBannerImage     String   @default("/images/promo-banner.jpg")
+  aboutImage           String   @default("/images/about.jpg")
+  updatedAt            DateTime @updatedAt
+}
+
+model AdminUser {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+}
